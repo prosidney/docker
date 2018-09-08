@@ -80,4 +80,19 @@ ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
 COPY plugins.sh /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+
 COPY libjffi-1.2.so /usr/java/packages/lib/arm/
+
+USER root
+
+RUN wget https://download.docker.com/linux/debian/dists/stretch/pool/stable/armhf/docker-ce_18.06.0~ce~3-0~debian_armhf.deb
+
+RUN apt-get update
+
+RUN apt-get install iptables -y
+RUN apt-get install libdevmapper1.02.1 -y
+RUN apt-get install libltdl7 -y
+RUN apt-get install libseccomp2 -y
+RUN dpkg -i docker-ce_18.06.0~ce~3-0~debian_armhf.deb
+
+RUN docker run hello-world
